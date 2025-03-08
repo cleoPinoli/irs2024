@@ -1,0 +1,47 @@
+\addcontentsline{toc}{chapter}{DHCP}
+\chapter*{\begin{center}DHCP\end{center}}
+\hrulefill (argomento interno all'app layer)\hrulefill\\
+\noindent \underline{D}ynamic \underline{H}ost \underline{C}onfiguration \underline{P}rotocol\index{DHCP} - serve a configurare gli host.\\
+\noindent Problemi sorti nella decisione di \openapex come deve essere fatto un sistema di idnirizzamento:\begin{itemize}
+    \item duplicazione degli indirizzi IP: che facciamo se qualcuno si assegna un indirizzo IP che già appartiene ad un altro Host?\footnote{Tra l'altro, e mi permetto di aggiungere ``ovviamente'', gli indirizzi IPv4. Per ovviare a questo problema, spesso si ricorre al NAT, Network Address Translation, che si fa anche per risparmiare sull'uso degli indirizzi IP pubblici.}
+    \item riassegnazione degli indirizzi IP: ad esempio, come riassegniamo gli indirizzi quando spostiamo un ufficio da una sede ad una nuova sede fisica?
+    \item spreco di indirizzi IP inutilizzati;
+    \item interfaccia che renda possibile vedere tutti questi indirizzi;\footnote{se avete curiosità, fate un salto al sito \href{https://www.showmyip.com/}{showmyip.com/}}
+\end{itemize}
+
+\noindent Usando TCP, si possono usare 2 protocolli che si occupano di configurazione host (assegnano indirizzi IP in maniera automatica):
+\begin{itemize}
+    \item BOOTP\index{BOOTP} : funziona con i thin client (host senza disco), usa UDP;
+    \item DHCP : come BOOTP, ma ulteriormente sviluppato. Introduce il parametro di \openapex lease'' : parametro di tempo, durante il quale l'host può usare l'indirizzo IP che DHCP gli ha assegnato (tipo un token di noleggio).
+\end{itemize}
+
+\noindent DHCP configura:
+\begin{itemize}
+    \item indirizzo IP;
+    \item maschera di sottorete;
+    \item indirizzi Gateway e DNS (ma non sempre);
+    \item altri parametri.
+\end{itemize}
+
+\noindent L'addressing può avvenire in 3 modalità:
+\begin{itemize}
+    \item assegnazione manuale (o reservation): legata all'indirizzo MAC;
+    \item assegnazione automatica: il tempo di lease normalmente è $=\infty$;
+    \item assegnazione dinamica: il tempo di lease è molto breve $\approx 1h$;
+\end{itemize}
+
+\noindent L'addressing avviene in 4(+1) fasi:
+\begin{enumerate}
+    \item discover;
+    \item offer;
+    \item request;
+    \item ack;
+    \item release (non uso più l'indirizzo, i.e. ho spento il PC)*;
+\end{enumerate}
+\noindent \textcolor{Blue}{*È buona pratica che non si interrompa la connessione scollegando il cavo o mettendo il PC in standby quando si lascia un qualche luogo: così facendo, il DHCP non riesce a venire a sapere che la connessione è stata interrotta (si spreca l'indirizzo).}\\
+
+\noindent \index{NETBEUI}\index{NETBIOS}\index{SAMBA}\textcolor{Blue}{Note di Lab: Il protocollo NETBEUI o NETBIOS (di Microsoft, nei sistemi Linux esiste il protocollo SAMBA), un vecchio protocollo di rete che funziona solo in locale. Il DNS di NETBEUI si chiama WINS (Windows Internet Name Service).}\\
+
+\noindent Banalmente, per essere raggiungibile, il DHCP Server deve essere configurato con indirizzo Statico!\\
+
+\noindent \index{DHCP!relay}DHCP Relay: funzione implementata nei router per cui le richieste DHCP dagli host vengono inoltrate ad un DHCP Server limitrofo. Se non c'è un DHCP Server a disposizione, un sistema Windows ha IP $169.254.0.0/16$.
